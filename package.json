@@ -1,0 +1,28 @@
+{
+  "name": "national-e-governance-portal",
+  "version": "1.0.0",
+  "description": "A centralized digital e-governance platform facilitating citizen service delivery, multi-tier application scrutiny, role-based workflows, and public grievance redressal.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/seed.js",
+    "test": "node tests/test_suite.js"
+  },
+  "keywords": [
+    "e-governance",
+    "digital-india",
+    "citizen-services",
+    "grievance-redressal",
+    "express",
+    "sqlite",
+    "rbac",
+    "workflow-automation"
+  ],
+  "author": "Abhishek Purohit",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "multer": "^2.5.0"
+  }
+}

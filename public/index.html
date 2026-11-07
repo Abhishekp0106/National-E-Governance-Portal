@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="National E-Governance Portal - Centralized citizen services application and grievance redressal platform.">
+  <title>National E-Governance Portal (NEGP) | Government Services & Grievance Redressal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-top-bar"></div>
+
+  <!-- Header -->
+  <header class="portal-header">
+    <div class="header-brand">
+      <div class="emblem-icon">🏛️</div>
+      <div class="brand-text">
+        <h1>National E-Governance Portal</h1>
+        <p>Government of India • Ministry of Electronics & IT • Unified Public Services Delivery</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="role-switcher-box">
+        <label for="roleSelector">Active Role:</label>
+        <select id="roleSelector" onchange="handleRoleChange(this.value)">
+          <option value="citizen">Citizen: Abhishek Purohit</option>
+          <option value="officer">Govt Officer: Rajesh Sharma (Revenue)</option>
+          <option value="head">Dept Head: Dr. Sunita Verma</option>
+          <option value="admin">System Administrator</option>
+        </select>
+      </div>
+      <div class="current-user-badge" id="currentUserBadge">
+        <span class="user-role-tag">Citizen</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar" id="mainNavigation">
+    <button class="nav-tab active" data-tab="tab-services" id="navServicesBtn">
+      <span>📋</span> Browse Services
+    </button>
+    <button class="nav-tab" data-tab="tab-apply" id="navApplyBtn">
+      <span>✍️</span> Apply for Service
+    </button>
+    <button class="nav-tab" data-tab="tab-my-apps" id="navMyAppsBtn">
+      <span>📂</span> Track Applications
+    </button>
+    <button class="nav-tab" data-tab="tab-grievance" id="navGrievanceBtn">
+      <span>📢</span> File Grievance
+    </button>
+    <button class="nav-tab" data-tab="tab-my-grievances" id="navMyGrievancesBtn">
+      <span>🔍</span> Track Grievances
+    </button>
+    <button class="nav-tab" data-tab="tab-officer-desk" id="navOfficerDeskBtn" style="display: none;">
+      <span>⚖️</span> Officer Processing Desk
+    </button>
+    <button class="nav-tab" data-tab="tab-dashboard" id="navDashboardBtn">
+      <span>📊</span> Portal Analytics
+    </button>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-container">
+    
+    <!-- TAB 1: BROWSE SERVICES (Module 1) -->
+    <section id="tab-services" class="tab-content active">
+      <div class="hero-banner">
+        <div>
+          <span class="badge-tag">Government of India Digital Services</span>
+          <h2>Digital Citizen Services Catalog</h2>
+          <p>Access state and central government services online. Submit applications, upload digital certificates, and track processing in real time.</p>
+        </div>
+        <button class="btn btn-primary" onclick="switchTab('tab-apply')">Start New Application ➔</button>
+      </div>
+
+      <div class="table-header-bar" style="margin-bottom: 20px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+        <h3 style="font-size: 1.1rem; color: var(--primary-dark);">Available Government Services</h3>
+        <div class="search-input-box">
+          <input type="text" id="serviceSearchInput" class="form-control" placeholder="Search by service name or department..." oninput="filterServices(this.value)">
+        </div>
+      </div>
+
+      <div class="cards-grid" id="servicesGridContainer">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- TAB 2: APPLY FOR SERVICE (Module 1) -->
+    <section id="tab-apply" class="tab-content">
+      <div class="form-card">
+        <div class="form-header">
+          <span class="badge-tag" id="applyBadgeTag">Module 1: Service Application</span>
+          <h3 id="applyFormHeading">Government Service Application Form</h3>
+          <p>Fill out the applicant details, upload mandatory supporting proofs, and submit for verification.</p>
+        </div>
+
+        <form id="applicationForm" onsubmit="handleApplicationSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label for="applyServiceSelect">Target Government Service <span class="req">*</span></label>
+              <select id="applyServiceSelect" class="form-control" required onchange="handleServiceSelectionChange(this.value)">
+                <option value="">-- Select a Government Service --</option>
+              </select>
+            </div>
+
+            <div class="form-group form-full" id="serviceInfoBanner" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 14px; border-radius: var(--radius-sm); font-size: 0.88rem;">
+              <!-- Dynamic Service Metadata -->
+            </div>
+
+            <div class="form-group">
+              <label for="applicantName">Full Name of Applicant <span class="req">*</span></label>
+              <input type="text" id="applicantName" class="form-control" placeholder="Enter legal name" required value="Abhishek Purohit">
+            </div>
+
+            <div class="form-group">
+              <label for="applicantEmail">Email Address <span class="req">*</span></label>
+              <input type="email" id="applicantEmail" class="form-control" placeholder="name@domain.com" required value="abhishek.citizen@negp.gov.in">
+            </div>
+
+            <div class="form-group">
+              <label for="applicantPhone">Mobile Number (10 Digits) <span class="req">*</span></label>
+              <input type="tel" id="applicantPhone" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" required value="9876543210">
+            </div>
+
+            <div class="form-group">
+              <label for="identityType">Identity Proof Type <span class="req">*</span></label>
+              <select id="identityType" class="form-control" required>
+                <option value="Aadhaar Card">Aadhaar Card (UIDAI)</option>
+                <option value="PAN Card">PAN Card</option>
+                <option value="Voter ID">Voter ID (EPIC)</option>
+                <option value="Passport">Passport</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="identityNumber">Identity Document Number <span class="req">*</span></label>
+              <input type="text" id="identityNumber" class="form-control" placeholder="Enter ID number" required value="1234-5678-9012">
+            </div>
+
+            <div class="form-group">
+              <label for="annualIncome">Annual Household Income (₹)</label>
+              <input type="number" id="annualIncome" class="form-control" placeholder="450000" value="450000">
+            </div>
+
+            <div class="form-group form-full">
+              <label for="applicantAddress">Permanent Residential Address <span class="req">*</span></label>
+              <textarea id="applicantAddress" class="form-control" required placeholder="Enter complete residential address with PIN code">Flat 402, Green Avenue, Sector 9, City - 400001</textarea>
+            </div>
+
+            <div class="form-group form-full">
+              <label>Supporting Documents (PDF, JPG, PNG - Max 5MB) <span class="req">*</span></label>
+              <div class="file-upload-zone" onclick="document.getElementById('docFileInput').click()">
+                <div style="font-size: 2rem;">📁</div>
+                <strong>Click to select documents or drag & drop files here</strong>
+                <p>Supported: Aadhaar Card, Income Slip, Address Proof, Electricity Bill (PDF, JPG, PNG)</p>
+                <input type="file" id="docFileInput" multiple style="display: none;" onchange="handleFileSelected(event)">
+                <div id="selectedFilesList" style="margin-top: 10px; font-weight: 600; color: var(--primary);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="button" class="btn btn-secondary" onclick="saveApplicationDraft()">Save as Draft</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitApplication">Submit Application ➔</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: TRACK APPLICATIONS (Module 1) -->
+    <section id="tab-my-apps" class="tab-content">
+      <div class="table-card">
+        <div class="table-header-bar">
+          <div>
+            <h3 style="font-size: 1.15rem; color: var(--primary-dark);">Application Status & Tracking</h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Real-time status tracking across submission, verification, and approval lifecycle</p>
+          </div>
+          <div class="search-input-box">
+            <input type="text" id="appSearchInput" class="form-control" placeholder="Search Application ID..." oninput="filterApplicationsTable(this.value)">
+            <button class="btn btn-secondary" onclick="loadApplications()">Refresh</button>
+          </div>
+        </div>
+
+        <table class="data-table" id="applicationsTable">
+          <thead>
+            <tr>
+              <th>Application ID</th>
+              <th>Service</th>
+              <th>Applicant</th>
+              <th>Submission Date</th>
+              <th>Status</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 4: FILE GRIEVANCE (Module 2) -->
+    <section id="tab-grievance" class="tab-content">
+      <div class="form-card">
+        <div class="form-header">
+          <span class="badge-tag">Module 2: Grievance Redressal</span>
+          <h3>Public Grievance Registration Form</h3>
+          <p>Register complaints regarding delayed government services, departmental misconduct, or procedural issues.</p>
+        </div>
+
+        <form id="grievanceForm" onsubmit="handleGrievanceSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="grvDepartment">Target Department <span class="req">*</span></label>
+              <select id="grvDepartment" class="form-control" required>
+                <option value="">-- Select Department --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="grvCategory">Complaint Category <span class="req">*</span></label>
+              <select id="grvCategory" class="form-control" required>
+                <option value="Delay in Service Delivery">Delay in Service Delivery</option>
+                <option value="Harassment or Demand of Bribe">Harassment / Misconduct</option>
+                <option value="Incorrect Certificate Data">Incorrect Certificate Data</option>
+                <option value="Technical Portal Error">Technical Portal Error</option>
+                <option value="Ration / PDS Distribution Issue">Ration / PDS Distribution Issue</option>
+                <option value="Other Public Grievance">Other Public Grievance</option>
+              </select>
+            </div>
+
+            <div class="form-group form-full">
+              <label for="grvTitle">Grievance Subject / Title (Min. 5 chars) <span class="req">*</span></label>
+              <input type="text" id="grvTitle" class="form-control" placeholder="Brief summary of your grievance" required minlength="5">
+            </div>
+
+            <div class="form-group form-full">
+              <label for="grvDescription">Detailed Description of Complaint <span class="req">*</span></label>
+              <textarea id="grvDescription" class="form-control" required placeholder="Provide full details, incident dates, officer names, and any prior reference numbers..."></textarea>
+            </div>
+
+            <div class="form-group form-full">
+              <label for="grvEvidence">Supporting Reference / Evidence (Application Ref No. / Document Notes)</label>
+              <input type="text" id="grvEvidence" class="form-control" placeholder="e.g. Prior Application ID: NEGP-APP-2026-10001">
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="reset" class="btn btn-secondary">Clear</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitGrievance">Register Grievance ➔</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 5: TRACK GRIEVANCES (Module 2) -->
+    <section id="tab-my-grievances" class="tab-content">
+      <div class="table-card">
+        <div class="table-header-bar">
+          <div>
+            <h3 style="font-size: 1.15rem; color: var(--primary-dark);">Registered Grievances & Redressal Status</h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Track departmental resolution, officer investigation notes, and submit resolution feedback</p>
+          </div>
+          <div class="search-input-box">
+            <input type="text" id="grvSearchInput" class="form-control" placeholder="Search Grievance ID..." oninput="filterGrievanceTable(this.value)">
+            <button class="btn btn-secondary" onclick="loadGrievances()">Refresh</button>
+          </div>
+        </div>
+
+        <table class="data-table" id="grievancesTable">
+          <thead>
+            <tr>
+              <th>Grievance ID</th>
+              <th>Department</th>
+              <th>Category</th>
+              <th>Title</th>
+              <th>Lodged Date</th>
+              <th>Status</th>
+              <th>Officer Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="grievancesTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 6: OFFICER & DEPT HEAD PROCESSING DESK (Modules 1 & 2) -->
+    <section id="tab-officer-desk" class="tab-content">
+      <div class="hero-banner" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
+        <div>
+          <span class="badge-tag">Government Verification & Approval Console</span>
+          <h2 id="deskRoleTitle">Officer Processing Queue</h2>
+          <p>Review incoming citizen applications, examine uploaded proofs, transition status, and record official remarks.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <button class="btn btn-primary btn-sm" id="btnQueueApps" onclick="switchDeskView('apps')">Pending Service Applications</button>
+        <button class="btn btn-secondary btn-sm" id="btnQueueGrv" onclick="switchDeskView('grv')">Pending Public Grievances</button>
+      </div>
+
+      <!-- Desk: Applications Queue -->
+      <div id="deskAppsQueue" class="table-card">
+        <div class="table-header-bar">
+          <h4 style="color: var(--primary-dark);">Departmental Applications Queue</h4>
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">Click "Process" to update verification or approval</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Application ID</th>
+              <th>Applicant</th>
+              <th>Service</th>
+              <th>Identity</th>
+              <th>Current Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="officerAppsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Desk: Grievances Queue -->
+      <div id="deskGrvQueue" class="table-card" style="display: none;">
+        <div class="table-header-bar">
+          <h4 style="color: var(--primary-dark);">Departmental Grievance Resolution Desk</h4>
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">Review citizen grievances, assign resolution, or escalate</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Grievance ID</th>
+              <th>Citizen</th>
+              <th>Department</th>
+              <th>Category</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="officerGrvTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 7: PORTAL DASHBOARD / ANALYTICS -->
+    <section id="tab-dashboard" class="tab-content">
+      <div class="stats-row" id="statsRowContainer">
+        <div class="stat-card">
+          <div class="stat-label">Total Applications</div>
+          <div class="stat-value" id="statTotalApps">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved Certificates</div>
+          <div class="stat-value" id="statApprovedApps" style="color: #166534;">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Under Verification</div>
+          <div class="stat-value" id="statUnderVerification" style="color: #92400e;">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Grievances</div>
+          <div class="stat-value" id="statTotalGrv">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Grievances Resolved</div>
+          <div class="stat-value" id="statResolvedGrv" style="color: #065f46;">-</div>
+        </div>
+      </div>
+
+      <div class="table-card" style="padding: 24px;">
+        <h3 style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 12px;">Portal Architecture & Workflow Traceability</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 16px;">
+          System operational specifications and architectural workflow standards:
+        </p>
+        <ul style="padding-left: 20px; font-size: 0.88rem; color: var(--text-primary); line-height: 1.8;">
+          <li><strong>Module 1 Workflow:</strong> Draft ➔ Submitted ➔ Under Verification (Govt Officer) ➔ Pending Approval ➔ Approved / Rejected (Dept Head) ➔ Closed</li>
+          <li><strong>Module 2 Workflow:</strong> Filed ➔ In Progress (Officer Investigation) ➔ Resolved / Escalated ➔ Closed + Citizen Feedback Rating</li>
+          <li><strong>Relational DB Persistence:</strong> Node SQLite relational schema backing users, departments, services, applications, documents, and audit logs.</li>
+          <li><strong>Testing Verification:</strong> Black-Box Boundary Value Analysis (BVA), Equivalence Partitioning (EP), and Role-Based Authorization validation.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Application Details & Processing -->
+  <div class="modal-overlay" id="appDetailsModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4 id="modalAppTitle">Application Details</h4>
+        <button class="modal-close" onclick="closeModal('appDetailsModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalAppBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer" id="modalAppFooter">
+        <button class="btn btn-secondary" onclick="closeModal('appDetailsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Grievance Details & Resolution -->
+  <div class="modal-overlay" id="grvDetailsModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4 id="modalGrvTitle">Grievance Details</h4>
+        <button class="modal-close" onclick="closeModal('grvDetailsModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalGrvBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer" id="modalGrvFooter">
+        <button class="btn btn-secondary" onclick="closeModal('grvDetailsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
